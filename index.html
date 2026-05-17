@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wett Elite">
+<title>Wett Elite</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #05080f;
+  color: #e8edf5;
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: -150px; left: -150px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #00e67606 0%, transparent 70%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #38b6ff05 0%, transparent 70%);
+  pointer-events: none;
+}
+.wrap { max-width: 400px; width: 100%; }
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #334155;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  text-align: center;
+}
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 15vw, 80px);
+  letter-spacing: 3px;
+  text-align: center;
+  line-height: 0.9;
+  margin-bottom: 6px;
+}
+h1 span { color: #00e676; }
+.subtitle {
+  font-size: 10px;
+  color: #4a5568;
+  text-align: center;
+  margin-bottom: 48px;
+  letter-spacing: 1px;
+}
+.cards { display: flex; flex-direction: column; gap: 12px; }
+.card {
+  display: block;
+  text-decoration: none;
+  background: #0b1120;
+  border: 1px solid #162035;
+  border-radius: 14px;
+  padding: 20px 22px;
+  transition: all .2s;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 14px 14px 0 0;
+  transition: opacity .2s;
+  opacity: 0;
+}
+.card.green::before { background: linear-gradient(90deg, #00e676, #00e67644); }
+.card.blue::before  { background: linear-gradient(90deg, #38b6ff, #38b6ff44); }
+.card.gold::before  { background: linear-gradient(90deg, #ffc947, #ffc94744); }
+.card:hover { transform: translateY(-2px); border-color: #1e3a5f; }
+.card:hover::before { opacity: 1; }
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.card-icon { font-size: 24px; }
+.card-arrow {
+  font-size: 18px;
+  color: #1e293b;
+  transition: color .2s, transform .2s;
+}
+.card:hover .card-arrow { color: #4a5568; transform: translateX(3px); }
+.card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.card.green .card-title { color: #00e676; }
+.card.blue  .card-title { color: #38b6ff; }
+.card.gold  .card-title { color: #ffc947; }
+.card-desc { font-size: 11px; color: #4a5568; line-height: 1.5; }
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+.tag {
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.tag.green { background: #00e67612; color: #00e676; border: 1px solid #00e67625; }
+.tag.blue  { background: #38b6ff12; color: #38b6ff; border: 1px solid #38b6ff25; }
+.tag.gold  { background: #ffc94712; color: #ffc947; border: 1px solid #ffc94725; }
+.footer {
+  margin-top: 40px;
+  font-size: 10px;
+  color: #1e293b;
+  text-align: center;
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Wett Elite · Johannes Scheine</div>
+  <h1>DEIN<br><span>SETUP</span></h1>
+  <div class="subtitle">897 Wetten analysiert · 7 Wochen Datenbasis · 73.8% Winrate</div>
+
+  <div class="cards">
+
+    <a href="tracker.html" class="card green">
+      <div class="card-top">
+        <div class="card-icon">📊</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-title">Wett Tracker</div>
+      <div class="card-desc">Jede Wette erfassen — Liga, Markt, Quote, Zeitraum. Winrate, EV und Profit in Echtzeit.</div>
+      <div class="card-tags">
+        <span class="tag green">Live Stats</span>
+        <span class="tag green">Analyse</span>
+        <span class="tag green">Export / Import</span>
+      </div>
+    </a>
+
+    <a href="finaler_wettplan.html" class="card blue">
+      <div class="card-top">
+        <div class="card-icon">📋</div>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="card-title">Finaler Wettplan</div>
+      <div class="card-desc">Zeitfenster, Filter-Regeln, Bankroll-Management und Einsatz-Progression auf einen Blick.</div>
+      <div class="card-tags">
+        <span class="tag blue">Zeitfenster</span>
+        <span class="tag blue">Flat Betting</span>
+        <span class="tag blue">Progression</span>
+      </div>
+    </a>
+
+    <div class="card gold" style="cursor:default;">
+      <div class="card-top">
+        <div class="card-icon">🎯</div>
+        <div style="font-size:11px;color:#ffc94744;">Kurzübersicht</div>
+      </div>
+      <div class="card-title">Deine Regeln</div>
+      <div class="card-desc">
+        ✓ Nur LIVE · ✓ Quote 1.55–1.70<br>
+        ✓ 14:45–16:15 täglich<br>
+        ✓ 22:45–23:15 Mo/Mi/Do/Sa/So<br>
+        ✓ 23:45–01:15 nur Sa/So<br>
+        ✓ 20€ Flat · 400€ Bankroll
+      </div>
+      <div class="card-tags">
+        <span class="tag gold">~65€/Woche</span>
+        <span class="tag gold">73.8% WR</span>
+        <span class="tag gold">0 rote Wochen</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">WETT ELITE · MAI 2026</div>
+</div>
+</body>
+</html>
