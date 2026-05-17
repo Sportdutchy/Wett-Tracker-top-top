@@ -5,195 +5,476 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Wett Elite">
-<title>Wett Elite</title>
+<meta name="apple-mobile-web-app-title" content="Wett Tracker">
+<title>Wett Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+:root {
+  --bg: #05080f; --surface: #0b1120; --border: #162035;
+  --green: #00e676; --red: #ff4444; --gold: #ffc947; --blue: #38b6ff;
+  --text: #e8edf5; --muted: #4a5568;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: #05080f;
-  color: #e8edf5;
-  font-family: 'DM Mono', monospace;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 20px;
-}
-body::before {
-  content: '';
-  position: fixed;
-  top: -150px; left: -150px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, #00e67606 0%, transparent 70%);
-  pointer-events: none;
-}
-body::after {
-  content: '';
-  position: fixed;
-  bottom: -100px; right: -100px;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, #38b6ff05 0%, transparent 70%);
-  pointer-events: none;
-}
-.wrap { max-width: 400px; width: 100%; }
-.eyebrow {
-  font-size: 10px;
-  letter-spacing: 4px;
-  color: #334155;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  text-align: center;
-}
-h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(52px, 15vw, 80px);
-  letter-spacing: 3px;
-  text-align: center;
-  line-height: 0.9;
-  margin-bottom: 6px;
-}
-h1 span { color: #00e676; }
-.subtitle {
-  font-size: 10px;
-  color: #4a5568;
-  text-align: center;
-  margin-bottom: 48px;
-  letter-spacing: 1px;
-}
-.cards { display: flex; flex-direction: column; gap: 12px; }
-.card {
-  display: block;
-  text-decoration: none;
-  background: #0b1120;
-  border: 1px solid #162035;
-  border-radius: 14px;
-  padding: 20px 22px;
-  transition: all .2s;
-  position: relative;
-  overflow: hidden;
-}
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  border-radius: 14px 14px 0 0;
-  transition: opacity .2s;
-  opacity: 0;
-}
-.card.green::before { background: linear-gradient(90deg, #00e676, #00e67644); }
-.card.blue::before  { background: linear-gradient(90deg, #38b6ff, #38b6ff44); }
-.card.gold::before  { background: linear-gradient(90deg, #ffc947, #ffc94744); }
-.card:hover { transform: translateY(-2px); border-color: #1e3a5f; }
-.card:hover::before { opacity: 1; }
-.card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-.card-icon { font-size: 24px; }
-.card-arrow {
-  font-size: 18px;
-  color: #1e293b;
-  transition: color .2s, transform .2s;
-}
-.card:hover .card-arrow { color: #4a5568; transform: translateX(3px); }
-.card-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 26px;
-  letter-spacing: 2px;
-  margin-bottom: 4px;
-}
-.card.green .card-title { color: #00e676; }
-.card.blue  .card-title { color: #38b6ff; }
-.card.gold  .card-title { color: #ffc947; }
-.card-desc { font-size: 11px; color: #4a5568; line-height: 1.5; }
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 10px;
-}
-.tag {
-  font-size: 9px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
-}
-.tag.green { background: #00e67612; color: #00e676; border: 1px solid #00e67625; }
-.tag.blue  { background: #38b6ff12; color: #38b6ff; border: 1px solid #38b6ff25; }
-.tag.gold  { background: #ffc94712; color: #ffc947; border: 1px solid #ffc94725; }
-.footer {
-  margin-top: 40px;
-  font-size: 10px;
-  color: #1e293b;
-  text-align: center;
-  letter-spacing: 1px;
-}
+body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; padding-bottom: 60px; }
+.header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 14px 16px 0; position: sticky; top: 0; z-index: 100; }
+.title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 2px; line-height: 1; }
+.title span { color: var(--green); }
+.tabs { display: flex; margin-top: 8px; overflow-x: auto; }
+.tab { background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; font-family: inherit; font-size: 10px; letter-spacing: 1px; padding: 8px 11px; white-space: nowrap; }
+.tab.active { border-bottom-color: var(--green); color: var(--text); }
+.body { padding: 14px 16px; max-width: 500px; margin: 0 auto; }
+.panel { display: none; } .panel.active { display: block; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+.label { font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+.inp { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; font-size: 14px; padding: 9px 12px; width: 100%; outline: none; }
+.inp:focus { border-color: var(--blue); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.mkt-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.period-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
+.mkt-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; font-family: inherit; font-size: 11px; padding: 7px 3px; text-align: center; }
+.mkt-btn.sel { background: #0c2a4a; border-color: var(--blue); color: var(--blue); }
+.period-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; font-family: inherit; font-size: 10px; padding: 8px 4px; text-align: center; }
+.period-btn.sel { background: #0c2a4a; border-color: var(--blue); color: var(--blue); }
+.btn-win { background: #14532d; border: none; border-radius: 8px; color: var(--green); cursor: pointer; font-family: inherit; font-size: 16px; font-weight: 500; padding: 13px; width: 100%; }
+.btn-lose { background: #7f1d1d; border: none; border-radius: 8px; color: var(--red); cursor: pointer; font-family: inherit; font-size: 16px; font-weight: 500; padding: 13px; width: 100%; }
+.ghost { background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; font-family: inherit; font-size: 11px; padding: 5px 10px; }
+.toast { padding: 9px 14px; border-radius: 8px; font-size: 12px; text-align: center; margin-top: 10px; }
+.stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 22px; line-height: 1.1; }
+.section-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; margin-top: 14px; }
+.group-row { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.bet-row { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.league-dropdown { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; max-height: 220px; overflow-y: auto; margin-top: 4px; position: relative; z-index: 50; }
+.league-group-label { font-size: 9px; color: #334155; padding: 5px 12px 2px; background: var(--surface); position: sticky; top: 0; letter-spacing: 1px; }
+.league-item { padding: 7px 14px; font-size: 13px; color: #94a3b8; cursor: pointer; }
+.league-item:hover, .league-item.sel { background: #0c2a4a; color: var(--blue); }
+.league-selected { font-size: 11px; color: var(--blue); margin-top: 4px; padding: 3px 8px; background: #0c2a4a; border-radius: 5px; display: inline-block; }
+.wr-bar-bg { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 4px 0 10px; }
+.wr-bar-fill { height: 100%; border-radius: 3px; transition: width .5s; }
+.filter-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; font-family: inherit; font-size: 11px; padding: 4px 10px; }
+.filter-btn.active { border-color: var(--blue); color: var(--blue); }
+@media(max-width:400px) { .mkt-grid { grid-template-columns: repeat(4,1fr); } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="eyebrow">Wett Elite · Johannes Scheine</div>
-  <h1>DEIN<br><span>SETUP</span></h1>
-  <div class="subtitle">897 Wetten analysiert · 7 Wochen Datenbasis · 73.8% Winrate</div>
 
-  <div class="cards">
+<div class="header">
+  <div style="display:flex;align-items:baseline;gap:10px;">
+    <div class="title">WETT<span>TRACKER</span></div>
+    <div id="header-profit" style="font-size:11px;"></div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('eingabe')">EINGABE</button>
+    <button class="tab" onclick="switchTab('stats')">STATS</button>
+    <button class="tab" onclick="switchTab('analyse')">ANALYSE</button>
+    <button class="tab" onclick="switchTab('verlauf')">VERLAUF</button>
+    <button class="tab" onclick="switchTab('daten')">DATEN</button>
+  </div>
+</div>
 
-    <a href="index.html" class="card green">
-      <div class="card-top">
-        <div class="card-icon">📊</div>
-        <div class="card-arrow">→</div>
-      </div>
-      <div class="card-title">Wett Tracker</div>
-      <div class="card-desc">Jede Wette erfassen — Liga, Markt, Quote, Zeitraum. Winrate, EV und Profit in Echtzeit.</div>
-      <div class="card-tags">
-        <span class="tag green">Live Stats</span>
-        <span class="tag green">Analyse</span>
-        <span class="tag green">Export / Import</span>
-      </div>
-    </a>
+<div class="body">
 
-    <a href="finaler_wettplan.html" class="card blue">
-      <div class="card-top">
-        <div class="card-icon">📋</div>
-        <div class="card-arrow">→</div>
-      </div>
-      <div class="card-title">Finaler Wettplan</div>
-      <div class="card-desc">Zeitfenster, Filter-Regeln, Bankroll-Management und Einsatz-Progression auf einen Blick.</div>
-      <div class="card-tags">
-        <span class="tag blue">Zeitfenster</span>
-        <span class="tag blue">Flat Betting</span>
-        <span class="tag blue">Progression</span>
-      </div>
-    </a>
-
-    <div class="card gold" style="cursor:default;">
-      <div class="card-top">
-        <div class="card-icon">🎯</div>
-        <div style="font-size:11px;color:#ffc94744;">Kurzübersicht</div>
-      </div>
-      <div class="card-title">Deine Regeln</div>
-      <div class="card-desc">
-        ✓ Nur LIVE · ✓ Quote 1.55–1.70<br>
-        ✓ 14:45–16:15 täglich<br>
-        ✓ 22:45–23:15 Mo/Mi/Do/Sa/So<br>
-        ✓ 23:45–01:15 nur Sa/So<br>
-        ✓ 20€ Flat · 400€ Bankroll
-      </div>
-      <div class="card-tags">
-        <span class="tag gold">~65€/Woche</span>
-        <span class="tag gold">73.8% WR</span>
-        <span class="tag gold">0 rote Wochen</span>
-      </div>
+  <!-- EINGABE -->
+  <div id="panel-eingabe" class="panel active">
+    <div class="grid2">
+      <div><div class="label">Einsatz (€)</div><input class="inp" id="t-stake" type="number" value="20"></div>
+      <div><div class="label">Quote</div><input class="inp" id="t-odds" type="number" value="1.57" step="0.01"></div>
     </div>
-
+    <div class="grid2">
+      <div><div class="label">Datum</div><input class="inp" id="t-date" type="date"></div>
+      <div><div class="label">Uhrzeit</div><input class="inp" id="t-time" type="time"></div>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="label">Liga</div>
+      <div style="position:relative;">
+        <input class="inp" id="t-league-search" type="text" placeholder="Liga suchen..." oninput="filterLeagues()" onfocus="showLeagueDD()" style="padding-right:30px;">
+        <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#334155;font-size:10px;pointer-events:none;">▼</span>
+      </div>
+      <div id="league-selected" class="league-selected" style="display:none;"></div>
+      <div id="league-dd" class="league-dropdown" style="display:none;"></div>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="label">Markt — Über X Tore</div>
+      <div class="mkt-grid" id="mkt-grid"></div>
+    </div>
+    <div style="margin-bottom:8px;">
+      <div class="label">Zeitraum</div>
+      <div class="period-grid" id="period-grid"></div>
+    </div>
+    <div class="grid2" style="margin-bottom:8px;">
+      <button class="btn-win" onclick="addBet('W')">✓ GEWONNEN</button>
+      <button class="btn-lose" onclick="addBet('L')">✗ VERLOREN</button>
+    </div>
+    <div style="text-align:right;margin-bottom:4px;">
+      <button class="ghost" onclick="deleteLast()">↩ Letzte löschen</button>
+    </div>
+    <div id="toast" style="display:none;" class="toast"></div>
   </div>
 
-  <div class="footer">WETT ELITE · MAI 2026</div>
+  <!-- STATS -->
+  <div id="panel-stats" class="panel">
+    <div id="stats-content"></div>
+  </div>
+
+  <!-- ANALYSE -->
+  <div id="panel-analyse" class="panel">
+    <div id="analyse-content"></div>
+  </div>
+
+  <!-- VERLAUF -->
+  <div id="panel-verlauf" class="panel">
+    <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;">
+      <button class="filter-btn active" onclick="setFilter('all',this)">Alle</button>
+      <button class="filter-btn" onclick="setFilter('W',this)">✓ Gewonnen</button>
+      <button class="filter-btn" onclick="setFilter('L',this)">✗ Verloren</button>
+    </div>
+    <div id="verlauf-count" style="font-size:10px;color:var(--muted);margin-bottom:8px;"></div>
+    <div id="verlauf-list"></div>
+  </div>
+
+  <!-- DATEN -->
+  <div id="panel-daten" class="panel">
+    <div class="card">
+      <div class="label" style="margin-bottom:10px;">Daten sichern & wiederherstellen</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+        <button class="ghost" style="color:var(--blue);border-color:#0c2a4a;" onclick="exportData()">⬇ Download</button>
+        <button class="ghost" style="color:var(--blue);border-color:#0c2a4a;" onclick="copyData()">📋 Kopieren</button>
+        <button class="ghost" style="color:#a78bfa;border-color:#2d1b69;" onclick="toggleImport()">⬆ Import</button>
+        <button class="ghost" style="color:var(--red);border-color:#7f1d1d;" onclick="clearAll()">🗑 Löschen</button>
+      </div>
+      <div id="import-box" style="display:none;">
+        <div class="label" style="color:#a78bfa;margin-bottom:5px;">JSON einfügen:</div>
+        <textarea id="import-text" class="inp" rows="4" placeholder='[{"id":...}]' style="resize:vertical;font-size:11px;font-family:monospace;"></textarea>
+        <div style="display:flex;gap:6px;margin-top:6px;">
+          <button class="ghost" style="color:#a78bfa;" onclick="importData()">✓ Importieren</button>
+          <button class="ghost" onclick="toggleImport()">Abbrechen</button>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:10px;color:#334155;text-align:center;">Daten im Browser gespeichert · Jeden Sonntag exportieren</div>
+    <div id="daten-toast" style="display:none;margin-top:10px;" class="toast"></div>
+  </div>
+
 </div>
+
+<script>
+var BREAK_EVEN = 1/1.55;
+var STORAGE_KEY = 'wett_tracker_v3';
+var bets = [];
+var selMarket = '2.5';
+var selPeriod = 'Ganzes Spiel';
+var selLeague = 'Bundesliga';
+var filterVal = 'all';
+var leagueDD_open = false;
+
+var MARKETS = ['0.5','1.5','2.5','3.5','4.5','5.5','6.5'];
+var PERIODS = ['1. Halbzeit','2. Halbzeit','Ganzes Spiel'];
+var LEAGUE_GROUPS = {
+  '🏆 International':['Champions League','Europa League','Conference League','WM Quali','Nations League'],
+  '🇩🇪 Deutschland':['Bundesliga','2. Bundesliga','3. Liga','DFB Pokal'],
+  '🏴󠁧󠁢󠁥󠁮󠁧󠁿 England':['Premier League','Championship','League One','League Two'],
+  '🇪🇸 Spanien':['La Liga','Segunda División'],
+  '🇮🇹 Italien':['Serie A','Serie B'],
+  '🇫🇷 Frankreich':['Ligue 1','Ligue 2'],
+  '🇳🇱 Niederlande':['Eredivisie','Eerste Divisie'],
+  '🇵🇹 Portugal':['Primeira Liga','Segunda Liga'],
+  '🇧🇪 Belgien':['First Division A','First Division B'],
+  '🇹🇷 Türkei':['Süper Lig','1. Lig'],
+  '🇦🇹 Österreich':['Bundesliga AT','2. Liga AT'],
+  '🇨🇭 Schweiz':['Super League CH','Challenge League'],
+  '🇸🇪 Schweden':['Allsvenskan','Superettan'],
+  '🇳🇴 Norwegen':['Eliteserien','1. divisjon'],
+  '🇩🇰 Dänemark':['Superliga DK','1. Division DK'],
+  '🇵🇱 Polen':['Ekstraklasa','1. Liga PL'],
+  '🇭🇷 Kroatien':['HNL','1. NL HR'],
+  '🇷🇴 Rumänien':['Liga 1 RO','Liga 2 RO'],
+  '🇺🇦 Ukraine':['Premier League UA','Persha liha'],
+  '🇷🇸 Serbien':['SuperLiga RS','Prva liga RS'],
+  '🇮🇱 Israel':['Premier League IL','Liga Leumit'],
+  '🇸🇦 Saudi-Arabien':['Saudi Pro League','First Division SA'],
+  '🇦🇪 VAE':['UAE Pro League','UAE Division 1'],
+  '🇶🇦 Katar':['Qatar Stars League','Qatar First Division'],
+  '🇮🇷 Iran':['Persian Gulf Pro League','Azadegan League'],
+  '🇯🇵 Japan':['J1 League','J2 League','J3 League'],
+  '🇰🇷 Südkorea':['K League 1','K League 2'],
+  '🇨🇳 China':['Chinese Super League','China League One'],
+  '🇮🇳 Indien':['Indian Super League','I-League'],
+  '🇦🇺 Australien':['A-League','NPL'],
+  '🇧🇷 Brasilien':['Brasileirão Série A','Brasileirão Série B'],
+  '🇦🇷 Argentinien':['Liga Profesional','Primera Nacional'],
+  '🇲🇽 Mexiko':['Liga MX','Liga de Expansión'],
+  '🇺🇸 USA':['MLS','USL Championship'],
+  '🇨🇴 Kolumbien':['Categoría Primera A','Torneo BetPlay'],
+  '🇨🇱 Chile':['Primera División CL','Primera B CL'],
+  '🇿🇦 Südafrika':['DStv Premiership','First Division ZA'],
+  '🇪🇬 Ägypten':['Egyptian Premier League'],
+  '🇲🇦 Marokko':['Botola Pro','Botola 2'],
+  '✏️ Sonstige':['Sonstige']
+};
+
+// ── Init ──
+function pad(n){return String(n).padStart(2,'0');}
+function init(){
+  // Load bets
+  try{ var r=localStorage.getItem(STORAGE_KEY); bets=r?JSON.parse(r):[]; }catch(e){ bets=[]; }
+  // Default date/time
+  var now=new Date();
+  document.getElementById('t-date').value=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  document.getElementById('t-time').value=pad(now.getHours())+':'+pad(now.getMinutes());
+  document.getElementById('t-league-search').value=selLeague;
+  // Build market buttons
+  var mg=document.getElementById('mkt-grid');
+  MARKETS.forEach(function(m){
+    var b=document.createElement('button');
+    b.className='mkt-btn'+(m===selMarket?' sel':'');
+    b.textContent='Ü'+m;
+    b.onclick=function(){selMarket=m;document.querySelectorAll('.mkt-btn').forEach(function(x){x.classList.remove('sel');});b.classList.add('sel');};
+    mg.appendChild(b);
+  });
+  // Build period buttons
+  var pg=document.getElementById('period-grid');
+  PERIODS.forEach(function(p){
+    var b=document.createElement('button');
+    b.className='period-btn'+(p===selPeriod?' sel':'');
+    b.textContent=p==='1. Halbzeit'?'1. HZ':p==='2. Halbzeit'?'2. HZ':'Gesamt';
+    b.onclick=function(){selPeriod=p;document.querySelectorAll('.period-btn').forEach(function(x){x.classList.remove('sel');});b.classList.add('sel');};
+    pg.appendChild(b);
+  });
+  // Close league DD on outside click
+  document.addEventListener('click',function(e){
+    var dd=document.getElementById('league-dd');
+    var inp=document.getElementById('t-league-search');
+    if(dd && inp && !dd.contains(e.target) && e.target!==inp){ dd.style.display='none'; leagueDD_open=false; }
+  });
+  updateHeaderProfit();
+}
+
+// ── League dropdown ──
+function showLeagueDD(){
+  leagueDD_open=true;
+  filterLeagues();
+  document.getElementById('league-dd').style.display='block';
+}
+function filterLeagues(){
+  var q=document.getElementById('t-league-search').value.toLowerCase();
+  var dd=document.getElementById('league-dd');
+  dd.innerHTML='';
+  dd.style.display='block';
+  leagueDD_open=true;
+  Object.keys(LEAGUE_GROUPS).forEach(function(group){
+    var leagues=LEAGUE_GROUPS[group].filter(function(l){return l.toLowerCase().indexOf(q)>=0;});
+    if(!leagues.length) return;
+    var glabel=document.createElement('div');
+    glabel.className='league-group-label';
+    glabel.textContent=group;
+    dd.appendChild(glabel);
+    leagues.forEach(function(l){
+      var item=document.createElement('div');
+      item.className='league-item'+(l===selLeague?' sel':'');
+      item.textContent=l;
+      item.onmousedown=function(e){e.preventDefault();selLeague=l;document.getElementById('t-league-search').value=l;var sel=document.getElementById('league-selected');sel.textContent='✓ '+l;sel.style.display='inline-block';dd.style.display='none';leagueDD_open=false;};
+      dd.appendChild(item);
+    });
+  });
+}
+
+// ── Storage ──
+function save(){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(bets));}catch(e){} }
+
+// ── Tabs ──
+function switchTab(name){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('panel-'+name).classList.add('active');
+  var tabs=document.querySelectorAll('.tab');
+  var names=['eingabe','stats','analyse','verlauf','daten'];
+  tabs[names.indexOf(name)].classList.add('active');
+  if(name==='stats') renderStats();
+  if(name==='analyse') renderAnalyse();
+  if(name==='verlauf') renderVerlauf();
+}
+
+// ── Toast ──
+var toastTimer=null;
+function showToast(msg,ok,id){
+  var el=document.getElementById(id||'toast');
+  el.textContent=msg;
+  el.style.display='block';
+  el.style.background=ok===false?'#7f1d1d':'#14532d';
+  el.style.color=ok===false?'var(--red)':'var(--green)';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){el.style.display='none';},2200);
+}
+
+// ── Add / Delete ──
+function addBet(result){
+  var s=parseFloat(document.getElementById('t-stake').value);
+  var o=parseFloat(document.getElementById('t-odds').value);
+  var lg=selLeague||document.getElementById('t-league-search').value||'Unbekannt';
+  if(!s||!o||o<1) return showToast('Ungültige Eingabe',false);
+  var dateVal=document.getElementById('t-date').value;
+  var timeVal=document.getElementById('t-time').value;
+  var dt=dateVal&&timeVal?new Date(dateVal+'T'+timeVal+':00').toISOString():new Date().toISOString();
+  var pnl=result==='W'?s*(o-1):-s;
+  bets.push({id:Date.now(),stake:s,odds:o,result:result,league:lg,market:selMarket,period:selPeriod,date:dt});
+  save();
+  updateHeaderProfit();
+  showToast((pnl>=0?'+':'')+pnl.toFixed(2)+'€ · '+lg,result==='W');
+}
+function deleteLast(){
+  if(!bets.length) return;
+  bets.pop(); save(); updateHeaderProfit();
+  showToast('Letzte Wette gelöscht',true);
+}
+function deleteBet(id){
+  bets=bets.filter(function(b){return b.id!==id;});
+  save(); updateHeaderProfit(); renderVerlauf();
+}
+
+// ── Stats calc ──
+function calcStats(arr){
+  if(!arr.length) return null;
+  var w=arr.filter(function(b){return b.result==='W';});
+  var wr=w.length/arr.length;
+  var avgO=arr.reduce(function(s,b){return s+b.odds;},0)/arr.length;
+  var profit=arr.reduce(function(s,b){return s+(b.result==='W'?b.stake*(b.odds-1):-b.stake);},0);
+  var ev=wr*(avgO-1)-(1-wr);
+  var streak=0; for(var i=arr.length-1;i>=0;i--){if(arr[i].result==='L')streak++;else break;}
+  return {wins:w.length,losses:arr.length-w.length,n:arr.length,wr:wr,avgO:avgO,profit:profit,ev:ev,streak:streak};
+}
+function calcGroup(arr,key){
+  var groups={};
+  arr.forEach(function(b){var g=b[key]||'Unbekannt';if(!groups[g])groups[g]=[];groups[g].push(b);});
+  return Object.keys(groups).map(function(name){var s=calcStats(groups[name]);return Object.assign({name:name},s);}).sort(function(a,b){return b.profit-a.profit;});
+}
+
+function updateHeaderProfit(){
+  var s=calcStats(bets);
+  var el=document.getElementById('header-profit');
+  if(!s){el.textContent='';return;}
+  el.textContent=(s.profit>=0?'+':'')+s.profit.toFixed(0)+'€';
+  el.style.color=s.profit>=0?'var(--green)':'var(--red)';
+}
+
+// ── Render Stats ──
+function renderStats(){
+  var el=document.getElementById('stats-content');
+  var s=calcStats(bets);
+  if(!s){el.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;font-size:12px;">Noch keine Wetten</div>';return;}
+  var gc=s.wr>=BREAK_EVEN?'var(--green)':'var(--red)';
+  var html='<div class="card">';
+  html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">';
+  html+='<div><div class="label">Gesamtgewinn</div>';
+  html+='<div style="font-family:Bebas Neue,sans-serif;font-size:42px;color:'+gc+';line-height:1;">'+(s.profit>=0?'+':'')+s.profit.toFixed(2)+'€</div></div>';
+  html+='<div style="text-align:right;"><div class="label">EV Status</div>';
+  html+='<div style="font-size:13px;font-weight:600;color:'+gc+'">'+(s.ev>0?'✓ POSITIV':'✗ NEGATIV')+'</div>';
+  html+='<div style="font-size:11px;color:var(--muted);">'+(s.ev*100>=0?'+':'')+(s.ev*100).toFixed(2)+'% / Wette</div></div></div>';
+  html+='<div class="label">Winrate '+(s.wr*100).toFixed(1)+'% — Break-Even '+(BREAK_EVEN*100).toFixed(1)+'%</div>';
+  html+='<div class="wr-bar-bg"><div class="wr-bar-fill" style="width:'+Math.min(100,s.wr*100)+'%;background:'+gc+';"></div></div>';
+  html+='</div>';
+  html+='<div class="stat-grid">';
+  var items=[
+    {l:'Wetten',v:s.n,c:''},
+    {l:'Gewonnen',v:s.wins,c:'var(--green)'},
+    {l:'Verloren',v:s.losses,c:'var(--red)'},
+    {l:'Ø Quote',v:s.avgO.toFixed(3),c:s.avgO>=1.55?'var(--green)':'var(--red)'},
+    {l:'Verlustserie',v:s.streak+'x',c:s.streak>=4?'var(--red)':s.streak>=2?'var(--gold)':'var(--muted)'},
+    {l:'Ø €/Tag',v:(s.profit/Math.max(1,Math.ceil(s.n/20))).toFixed(0)+'€',c:s.profit>=0?'var(--green)':'var(--red)'}
+  ];
+  items.forEach(function(item){
+    html+='<div class="stat-card"><div class="label">'+item.l+'</div><div class="stat-val" style="color:'+(item.c||'var(--text)')+'">'+item.v+'</div></div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+// ── Render Analyse ──
+function renderAnalyse(){
+  var el=document.getElementById('analyse-content');
+  if(!bets.length){el.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;font-size:12px;">Noch keine Daten</div>';return;}
+  function groupHTML(data){
+    return data.map(function(g){
+      var c=g.ev>0?'var(--green)':'var(--red)';
+      return '<div class="group-row">'+
+        '<div class="dot" style="background:'+c+';"></div>'+
+        '<div style="flex:1;font-size:13px;color:#cbd5e1;">'+g.name+'</div>'+
+        '<div style="font-size:11px;color:var(--muted);">'+g.n+'W</div>'+
+        '<div style="font-size:12px;color:var(--muted);margin-left:6px;">'+(g.wr*100).toFixed(1)+'%</div>'+
+        '<div style="font-size:13px;font-weight:600;min-width:55px;text-align:right;color:'+(g.profit>=0?'var(--green)':'var(--red)')+';">'+(g.profit>=0?'+':'')+g.profit.toFixed(1)+'€</div>'+
+        '</div>';
+    }).join('');
+  }
+  var html='<div class="section-title">📊 Nach Liga</div>'+groupHTML(calcGroup(bets,'league'));
+  html+='<div class="section-title">⚽ Nach Markt</div>'+calcGroup(bets,'market').map(function(g){return Object.assign({},g,{name:'Ü'+g.name+' Tore'});}).map(function(g){
+    var c=g.ev>0?'var(--green)':'var(--red)';
+    return '<div class="group-row"><div class="dot" style="background:'+c+';"></div><div style="flex:1;font-size:13px;color:#cbd5e1;">'+g.name+'</div><div style="font-size:11px;color:var(--muted);">'+g.n+'W</div><div style="font-size:12px;color:var(--muted);margin-left:6px;">'+(g.wr*100).toFixed(1)+'%</div><div style="font-size:13px;font-weight:600;min-width:55px;text-align:right;color:'+(g.profit>=0?'var(--green)':'var(--red)')+';">'+(g.profit>=0?'+':'')+g.profit.toFixed(1)+'€</div></div>';
+  }).join('');
+  html+='<div class="section-title">⏱ Nach Zeitraum</div>'+groupHTML(calcGroup(bets,'period'));
+  el.innerHTML=html;
+}
+
+// ── Render Verlauf ──
+function setFilter(val,btn){
+  filterVal=val;
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderVerlauf();
+}
+function renderVerlauf(){
+  var filtered=bets.slice().reverse().filter(function(b){return filterVal==='all'||b.result===filterVal;});
+  document.getElementById('verlauf-count').textContent=filtered.length+' Wetten';
+  var el=document.getElementById('verlauf-list');
+  if(!filtered.length){el.innerHTML='<div style="text-align:center;color:var(--muted);padding:30px;font-size:12px;">Keine Wetten</div>';return;}
+  el.innerHTML=filtered.slice(0,100).map(function(b){
+    var pnl=b.result==='W'?b.stake*(b.odds-1):-b.stake;
+    var d=new Date(b.date);
+    return '<div class="bet-row">'+
+      '<div class="dot" style="background:'+(b.result==='W'?'var(--green)':'var(--red)')+';"></div>'+
+      '<div style="flex:1;min-width:0;">'+
+        '<div style="font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+b.league+'</div>'+
+        '<div style="font-size:10px;color:var(--muted);">Ü'+b.market+' · '+(b.period||'Gesamt')+' · '+b.stake+'€ @ '+b.odds+' · '+d.getDate()+'.'+(d.getMonth()+1)+'. '+pad(d.getHours())+':'+pad(d.getMinutes())+'</div>'+
+      '</div>'+
+      '<div style="font-size:13px;font-weight:500;color:'+(pnl>=0?'var(--green)':'var(--red)')+';margin-right:4px;">'+(pnl>=0?'+':'')+pnl.toFixed(2)+'€</div>'+
+      '<button onclick="deleteBet('+b.id+')" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 5px;" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--muted)\'">✕</button>'+
+      '</div>';
+  }).join('');
+}
+
+// ── Daten ──
+function exportData(){
+  var blob=new Blob([JSON.stringify(bets,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download='wett_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exportiert ✓',true,'daten-toast');
+}
+function copyData(){
+  navigator.clipboard.writeText(JSON.stringify(bets)).then(function(){showToast('Kopiert ✓',true,'daten-toast');}).catch(function(){showToast('Fehler',false,'daten-toast');});
+}
+function toggleImport(){
+  var box=document.getElementById('import-box');
+  box.style.display=box.style.display==='none'?'block':'none';
+}
+function importData(){
+  try{
+    var parsed=JSON.parse(document.getElementById('import-text').value);
+    if(!Array.isArray(parsed)) throw new Error();
+    var added=0;
+    parsed.forEach(function(b){if(!bets.find(function(x){return x.id===b.id;})){bets.push(b);added++;}});
+    bets.sort(function(a,b){return a.id-b.id;});
+    save(); updateHeaderProfit();
+    document.getElementById('import-text').value='';
+    document.getElementById('import-box').style.display='none';
+    showToast(added+' Wetten importiert ✓',true,'daten-toast');
+  }catch(e){showToast('Ungültiges Format',false,'daten-toast');}
+}
+function clearAll(){
+  if(confirm('Alle Tracker-Daten löschen?')){bets=[];save();updateHeaderProfit();showToast('Gelöscht',true,'daten-toast');}
+}
+
+init();
+</script>
 </body>
 </html>
