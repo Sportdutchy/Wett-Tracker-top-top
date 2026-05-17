@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finaler Wettplan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05080f;
+    --surface: #0b1120;
+    --border: #162035;
+    --green: #00e676;
+    --green-dim: #00e67622;
+    --green-mid: #00e67644;
+    --red: #ff4444;
+    --red-dim: #ff444415;
+    --gold: #ffc947;
+    --gold-dim: #ffc94718;
+    --blue: #38b6ff;
+    --text: #e8edf5;
+    --muted: #4a5568;
+    --subtle: #1e2d45;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, #00e67608 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, #38b6ff06 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .wrap { max-width: 680px; margin: 0 auto; }
+
+  /* HEADER */
+  .header {
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
+  }
+  .header-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 10vw, 80px);
+    letter-spacing: 3px;
+    color: var(--text);
+    line-height: 0.9;
+    margin-bottom: 12px;
+  }
+  .header h1 span { color: var(--green); }
+  .header-sub {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-sub b { color: var(--green); }
+
+  /* SECTION */
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* STAT GRID */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .stat-grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .stat-label { font-size: 9px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1px; line-height: 1; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.gold { color: var(--gold); }
+  .stat-value.blue { color: var(--blue); }
+  .stat-note { font-size: 9px; color: var(--muted); margin-top: 4px; }
+
+  /* WEEK TABLE */
+  .week-table { display: flex; flex-direction: column; gap: 6px; }
+  .day-row {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .day-row.active { border-color: #162e20; background: #0a1a10; }
+  .day-row.limited { border-color: #1a1510; background: #100d08; }
+  .day-row::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 10px 0 0 10px;
+  }
+  .day-row.active::before { background: var(--green); }
+  .day-row.limited::before { background: var(--gold); }
+
+  .day-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+  .day-row.active .day-name { color: var(--green); }
+  .day-row.limited .day-name { color: var(--gold); }
+
+  .day-windows { display: flex; flex-wrap: wrap; gap: 5px; }
+  .window-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .window-tag.primary { background: var(--green-dim); color: var(--green); border: 1px solid #00e67630; }
+  .window-tag.secondary { background: #38b6ff15; color: var(--blue); border: 1px solid #38b6ff30; }
+  .window-tag.midnight { background: #a78bfa15; color: #a78bfa; border: 1px solid #a78bfa30; }
+  .window-tag.none { background: var(--red-dim); color: #ff6666; border: 1px solid #ff444430; font-style: italic; }
+
+  .day-sleep { font-size: 10px; color: var(--muted); text-align: right; white-space: nowrap; }
+  .day-sleep span { display: block; font-size: 9px; color: #2d3748; }
+
+  /* FILTER RULES */
+  .rules { display: flex; flex-direction: column; gap: 6px; }
+  .rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+  .rule.yes { border-color: #162e20; background: #0a1a1088; }
+  .rule.no  { border-color: #2a1010; background: #18080888; }
+  .rule-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .rule-content { flex: 1; }
+  .rule-title { font-size: 12px; font-weight: 500; margin-bottom: 3px; }
+  .rule.yes .rule-title { color: var(--green); }
+  .rule.no  .rule-title { color: var(--red); }
+  .rule-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* BANKROLL */
+  .bankroll-box {
+    background: var(--gold-dim);
+    border: 1px solid #ffc94730;
+    border-radius: 12px;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .bankroll-item { }
+  .bankroll-label { font-size: 9px; color: #ffc94780; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .bankroll-value { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--gold); letter-spacing: 1px; }
+  .bankroll-note { font-size: 10px; color: #ffc94766; margin-top: 3px; }
+
+  /* PROGRESSION */
+  .progression {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .prog-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 11px;
+  }
+  .prog-phase {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    width: 70px;
+    flex-shrink: 0;
+  }
+  .prog-condition { flex: 1; color: var(--muted); }
+  .prog-action { color: var(--green); font-weight: 500; white-space: nowrap; }
+  .prog-row.active-phase { border-color: #162e20; background: #0a1a10; }
+  .prog-row.active-phase .prog-phase { color: var(--green); }
+
+  /* WARNING */
+  .warning {
+    background: #ff44440a;
+    border: 1px solid #ff444425;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 11px;
+    color: #ff8888;
+    line-height: 1.7;
+    margin-top: 8px;
+  }
+  .warning b { color: var(--red); }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .footer span { color: var(--green); }
+
+  @media (max-width: 480px) {
+    .stat-grid { grid-template-columns: repeat(2,1fr); }
+    .bankroll-box { grid-template-columns: 1fr; }
+    .day-row { grid-template-columns: 80px 1fr; }
+    .day-sleep { display: none; }
+  }
+
+  /* TRACKER */
+  .ttab { background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:10px;letter-spacing:1px;padding:8px 12px;transition:all .15s; }
+  .ttab.active { border-bottom-color:var(--green);color:var(--text); }
+  .tinp { background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:13px;padding:9px 12px;width:100%;outline:none; }
+  .tinp:focus { border-color:var(--blue); }
+  .inp-label { font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px; }
+  .mktbtn { background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:inherit;font-size:11px;padding:7px 4px;text-align:center;transition:all .15s; }
+  .mktbtn.sel { background:#0c2a4a;border-color:var(--blue);color:var(--blue); }
+  .tbtn { border:none;border-radius:8px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:500;padding:13px;transition:all .15s; }
+  .tbtn-win { background:#14532d;color:var(--green); }
+  .tbtn-lose { background:#7f1d1d;color:var(--red); }
+  .tghost { background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);cursor:pointer;font-family:inherit;font-size:11px;padding:5px 11px; }
+  .tghost.active-f { border-color:var(--blue);color:var(--blue); }
+  .scard { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px; }
+  .scard-label { font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px; }
+  .scard-val { font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-label">Wett Elite · Johannes Scheine · Datenbasiert</div>
+    <h1>FINALER<br><span>WETTPLAN</span></h1>
+    <div class="header-sub">
+      <span>Basierend auf <b>897 Wetten</b></span>
+      <span>Zeitraum <b>März – Mai 2026</b></span>
+      <span>Strategie <b>Flat Betting</b></span>
+    </div>
+  </div>
+
+  <!-- ERWARTETE ERGEBNISSE -->
+  <div class="section">
+    <div class="section-title">Erwartete Ergebnisse</div>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">Winrate</div>
+        <div class="stat-value green">73.8%</div>
+        <div class="stat-note">Break-Even: 63.8%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pro Woche</div>
+        <div class="stat-value gold">+65€</div>
+        <div class="stat-note">bei 20€ Einsatz</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">EV / Wette</div>
+        <div class="stat-value blue">+10%</div>
+        <div class="stat-note">positiver Erwartungswert</div>
+      </div>
+    </div>
+    <div class="stat-grid stat-grid-2">
+      <div class="stat">
+        <div class="stat-label">Wetten / Woche</div>
+        <div class="stat-value" style="color:#e8edf5;font-size:22px">~21</div>
+        <div class="stat-note">ca. 3 pro Wetttag</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Rote Wochen (historisch)</div>
+        <div class="stat-value green">0 / 7</div>
+        <div class="stat-note">alle Wochen grün</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WOCHENPLAN -->
+  <div class="section">
+    <div class="section-title">Wochenplan</div>
+    <div class="week-table">
+
+      <div class="day-row active">
+        <div class="day-name">Montag</div>
+        <div class="day-windows">
+          <span class="window-tag primary">14:45–16:15</span>
+          <span class="window-tag secondary">22:45–23:15</span>
+        </div>
+        <div class="day-sleep">23:30 Bett<span>Aufstehen 7:30</span></div>
+      </div>
+
+      <div class="day-row limited">
+        <div class="day-name">Dienstag</div>
+        <div class="day-windows">
+          <span class="window-tag primary">14:45–16:15</span>
+          <span class="window-tag none">kein Abend</span>
+        </div>
+        <div class="day-sleep">22:00 Bett<span>Aufstehen 6:20</span></div>
+      </div>
+
+      <div class="day-row active">
+        <div class="day-name">Mittwoch</div>
+        <div class="day-windows">
+          <span class="window-tag primary">14:45–16:15</span>
+          <span class="window-tag secondary">22:45–23:15</span>
+        </div>
+        <div class="day-sleep">23:30 Bett<span>Aufstehen 7:30</span></div>
+      </div>
+
+      <div class="day-row active">
+        <div class="day-name">Donnerstag</div>
+        <div class="day-windows">
+          <span class="window-tag primary">14:45–16:15</span>
+          <span class="window-tag secondary">22:45–23:15</span>
+        </div>
+        <div class="day-sleep">23:30 Bett<span>Aufstehen 7:30</span></div>
+      </div>
+
+      <div class="day-row limited">
+        <div class="day-name">Freitag</div>
+        <div class="day-windows">
+          <span class="window-tag primary">14:45–16:15</span>
+          <span class="window-tag none">kein Abend</span>
+        </div>
+        <div class="day-sleep">22:00 Bett<span>Aufstehen 6:20</span></div>
+      </div>
+
+      <div class="day-row active">
+        <div class="day-name">Samstag</div>
+        <div class="day-windows">
+          <span class="window-tag primary">14:45–16:15</span>
+          <span class="window-tag secondary">22:45–23:15</span>
+          <span class="window-tag midnight">23:45–01:15</span>
+        </div>
+        <div class="day-sleep">01:30 Bett<span>kein fester Termin</span></div>
+      </div>
+
+      <div class="day-row active">
+        <div class="day-name">Sonntag</div>
+        <div class="day-windows">
+          <span class="window-tag primary">14:45–16:15</span>
+          <span class="window-tag secondary">22:45–23:15</span>
+          <span class="window-tag midnight">23:45–01:15</span>
+        </div>
+        <div class="day-sleep">01:30 Bett<span>kein fester Termin</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WETT-FILTER -->
+  <div class="section">
+    <div class="section-title">Wett-Filter — Was spielen, was nicht</div>
+    <div class="rules">
+      <div class="rule yes">
+        <div class="rule-icon">✅</div>
+        <div class="rule-content">
+          <div class="rule-title">Nur LIVE Wetten</div>
+          <div class="rule-desc">Pre Game komplett ignorieren. LIVE hat 65.8% WR (+23.8u), Pre Game nur 39.1% (-6.9u).</div>
+        </div>
+      </div>
+      <div class="rule yes">
+        <div class="rule-icon">✅</div>
+        <div class="rule-content">
+          <div class="rule-title">Alle Märkte erlaubt — außer schlechte</div>
+          <div class="rule-desc">Beste Märkte: Ü2.5 (71.7% WR) und Ü1.5 (66.7% WR). Alle anderen können gespielt werden — Tracker zeigt dir über Zeit welche bei dir funktionieren.</div>
+        </div>
+      </div>
+      <div class="rule yes">
+        <div class="rule-icon">✅</div>
+        <div class="rule-content">
+          <div class="rule-title">Quoten 1.55 – 1.70</div>
+          <div class="rule-desc">Sweet Spot mit +14.1 Einheiten Profit. Über 1.70 meiden (negativer EV).</div>
+        </div>
+      </div>
+      <div class="rule yes">
+        <div class="rule-icon">✅</div>
+        <div class="rule-content">
+          <div class="rule-title">Beste Ligen bevorzugen</div>
+          <div class="rule-desc">England (71.4%), Italien (78.3%), Brasilien (88.9%), Saudi Arabia (80.8%), Europa League (80%).</div>
+        </div>
+      </div>
+      <div class="rule no">
+        <div class="rule-icon">❌</div>
+        <div class="rule-content">
+          <div class="rule-title">Keine Pre Game Wetten</div>
+          <div class="rule-desc">39.1% Winrate über 23 Wetten — klarer Verlierer.</div>
+        </div>
+      </div>
+
+      <div class="rule no">
+        <div class="rule-icon">❌</div>
+        <div class="rule-content">
+          <div class="rule-title">Ligen meiden: Champions League, Copa Sudamericana, Azerbaijan</div>
+          <div class="rule-desc">CL: 50% WR (-6.6u) · Copa Sud: 40% WR (-3.9u) · Azerbaijan: 16.7% WR (-4.5u).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANKROLL & EINSATZ -->
+  <div class="section">
+    <div class="section-title">Bankroll & Einsatz</div>
+    <div class="bankroll-box">
+      <div class="bankroll-item">
+        <div class="bankroll-label">Startkapital</div>
+        <div class="bankroll-value">400€</div>
+        <div class="bankroll-note">Mindestbankroll für diesen Plan</div>
+      </div>
+      <div class="bankroll-item">
+        <div class="bankroll-label">Einsatz pro Wette</div>
+        <div class="bankroll-value">20€</div>
+        <div class="bankroll-note">Flat Betting — immer gleich</div>
+      </div>
+      <div class="bankroll-item">
+        <div class="bankroll-label">Einsatz vom Bankroll</div>
+        <div class="bankroll-value">5%</div>
+        <div class="bankroll-note">sicheres Verhältnis</div>
+      </div>
+      <div class="bankroll-item">
+        <div class="bankroll-label">Strategie</div>
+        <div class="bankroll-value" style="font-size:22px">FLAT</div>
+        <div class="bankroll-note">Kein Martingale, kein Anpassen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EINSATZ-PROGRESSION -->
+  <div class="section">
+    <div class="section-title">Einsatz-Progression — Wann erhöhen?</div>
+    <div class="progression">
+      <div class="prog-row active-phase">
+        <div class="prog-phase">JETZT</div>
+        <div class="prog-condition">Start — erste 4 Wochen beobachten</div>
+        <div class="prog-action">20€ / Wette</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-phase">WOCHE 4</div>
+        <div class="prog-condition">Winrate noch ≥ 68% nach 4 Wochen</div>
+        <div class="prog-action">→ 30€ / Wette</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-phase">WOCHE 8</div>
+        <div class="prog-condition">Winrate noch ≥ 68% nach 8 Wochen</div>
+        <div class="prog-action">→ 50€ / Wette</div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-phase">WOCHE 12</div>
+        <div class="prog-condition">Winrate noch ≥ 68% nach 12 Wochen</div>
+        <div class="prog-action">→ 75€ / Wette</div>
+      </div>
+    </div>
+    <div class="warning">
+      <b>Wichtig:</b> Sinkt die Winrate unter 65% über 2 aufeinanderfolgende Wochen — Einsatz sofort wieder auf 20€ reduzieren. Die Daten basieren auf 7 Wochen. Mehr Daten = mehr Sicherheit.
+    </div>
+  </div>
+
+  <!-- TRACKER -->
+  <div class="section">
+    <div class="section-title">Wett-Tracker</div>
+
+    <!-- Tracker Tabs -->
+    <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:16px;">
+      <button class="ttab active" onclick="switchTab('eingabe')" id="tab-eingabe">EINGABE</button>
+      <button class="ttab" onclick="switchTab('stats')" id="tab-stats">STATS</button>
+      <button class="ttab" onclick="switchTab('verlauf')" id="tab-verlauf">VERLAUF</button>
+      <button class="ttab" onclick="switchTab('daten')" id="tab-daten">DATEN</button>
+    </div>
+
+    <!-- EINGABE -->
+    <div id="panel-eingabe">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div>
+          <div class="inp-label">EINSATZ (€)</div>
+          <input class="tinp" id="t-stake" type="number" value="20" />
+        </div>
+        <div>
+          <div class="inp-label">QUOTE</div>
+          <input class="tinp" id="t-odds" type="number" value="1.57" step="0.01" />
+        </div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div class="inp-label">LIGA</div>
+        <input class="tinp" id="t-league" type="text" placeholder="z.B. Bundesliga, Premier League..." />
+      </div>
+      <div style="margin-bottom:8px;">
+        <div class="inp-label">DATUM & UHRZEIT</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <input class="tinp" id="t-date" type="date" />
+          <input class="tinp" id="t-time" type="time" />
+        </div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div class="inp-label">MARKT</div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
+          <button class="mktbtn sel" onclick="selMkt(this,'0.5')">Ü0.5</button>
+          <button class="mktbtn" onclick="selMkt(this,'1.5')">Ü1.5</button>
+          <button class="mktbtn" onclick="selMkt(this,'2.5')">Ü2.5</button>
+          <button class="mktbtn" onclick="selMkt(this,'3.5')">Ü3.5</button>
+          <button class="mktbtn" onclick="selMkt(this,'4.5')">Ü4.5</button>
+          <button class="mktbtn" onclick="selMkt(this,'5.5')">Ü5.5</button>
+          <button class="mktbtn" onclick="selMkt(this,'6.5')">Ü6.5</button>
+        </div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div class="inp-label">ZEITRAUM</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;">
+          <button class="mktbtn" onclick="selPeriod(this,'1. Halbzeit')">1. HZ</button>
+          <button class="mktbtn" onclick="selPeriod(this,'2. Halbzeit')">2. HZ</button>
+          <button class="mktbtn sel" onclick="selPeriod(this,'Ganzes Spiel')">Gesamt</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <button class="tbtn tbtn-win" onclick="addBet('W')">✓ GEWONNEN</button>
+        <button class="tbtn tbtn-lose" onclick="addBet('L')">✗ VERLOREN</button>
+      </div>
+      <div style="text-align:right;">
+        <button class="tghost" onclick="deleteLast()">↩ Letzte löschen</button>
+      </div>
+      <div id="t-toast" style="display:none;margin-top:8px;padding:8px 14px;border-radius:6px;font-size:12px;text-align:center;"></div>
+    </div>
+
+    <!-- STATS -->
+    <div id="panel-stats" style="display:none;">
+      <div id="stats-content">
+        <div style="text-align:center;color:var(--muted);padding:30px;font-size:12px;">Noch keine Wetten eingetragen</div>
+      </div>
+    </div>
+
+    <!-- VERLAUF -->
+    <div id="panel-verlauf" style="display:none;">
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
+        <button class="tghost active-f" onclick="setFilter('all',this)">Alle</button>
+        <button class="tghost" onclick="setFilter('W',this)">✓ Gewonnen</button>
+        <button class="tghost" onclick="setFilter('L',this)">✗ Verloren</button>
+      </div>
+      <div id="verlauf-list" style="display:flex;flex-direction:column;gap:5px;max-height:320px;overflow-y:auto;"></div>
+    </div>
+
+    <!-- DATEN -->
+    <div id="panel-daten" style="display:none;">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="inp-label">DATEN SICHERN & WIEDERHERSTELLEN</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <button class="tghost" style="color:var(--blue);border-color:#0c2a4a;" onclick="exportData()">⬇ Download JSON</button>
+          <button class="tghost" style="color:var(--blue);border-color:#0c2a4a;" onclick="copyData()">📋 Kopieren</button>
+          <button class="tghost" style="color:#a78bfa;border-color:#2d1b69;" onclick="document.getElementById('import-box').style.display='block'">⬆ Import</button>
+          <button class="tghost" style="color:var(--red);border-color:#7f1d1d;" onclick="clearAll()">🗑 Alle löschen</button>
+        </div>
+        <div id="import-box" style="display:none;background:var(--surface);border:1px solid #2d1b69;border-radius:10px;padding:12px;">
+          <div class="inp-label" style="color:#a78bfa;margin-bottom:6px;">JSON einfügen:</div>
+          <textarea id="import-text" class="tinp" rows="4" placeholder="[{...}]" style="resize:vertical;font-size:11px;font-family:monospace;"></textarea>
+          <div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="tghost" style="color:#a78bfa;" onclick="importData()">✓ Importieren</button>
+            <button class="tghost" onclick="document.getElementById('import-box').style.display='none'">Abbrechen</button>
+          </div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);">Jeden Sonntag exportieren und sichern.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Finaler Wettplan · Erstellt Mai 2026</span>
+    <span>897 Wetten analysiert · 7 Wochen Datenbasis</span>
+  </div>
+
+</div>
+
+<script>
+var BREAK_EVEN = 1/1.55;
+var bets = [];
+var selMarket = '0.5';
+var selPeriodVal = 'Ganzes Spiel';
+var filterVal = 'all';
+
+// Storage
+async function loadBets() {
+  try { const r = await window.storage.get('bets_plan_v1'); bets = r ? JSON.parse(r.value) : []; } catch { bets = []; }
+  renderAll();
+}
+async function saveBets() {
+  try { await window.storage.set('bets_plan_v1', JSON.stringify(bets)); } catch {}
+}
+
+function selMkt(btn, val) {
+  selMarket = val;
+  document.querySelectorAll('.mktbtn').forEach(b => { if(['0.5','1.5','2.5','3.5','4.5','5.5','6.5'].includes(b.textContent.replace('Ü',''))) b.classList.remove('sel'); });
+  btn.classList.add('sel');
+}
+function selPeriod(btn, val) {
+  selPeriodVal = val;
+  document.querySelectorAll('.mktbtn').forEach(b => { if(['1. HZ','2. HZ','Gesamt'].includes(b.textContent)) b.classList.remove('sel'); });
+  btn.classList.add('sel');
+}
+function switchTab(name) {
+  ['eingabe','stats','verlauf','daten'].forEach(t => {
+    document.getElementById('panel-'+t).style.display = t===name ? 'block' : 'none';
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+  });
+  if(name==='stats') renderStats();
+  if(name==='verlauf') renderVerlauf();
+}
+function showToast(msg, ok=true) {
+  const el = document.getElementById('t-toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.background = ok ? '#14532d' : '#7f1d1d';
+  el.style.color = ok ? 'var(--green)' : 'var(--red)';
+  setTimeout(() => el.style.display='none', 2200);
+}
+function addBet(result) {
+  const s = parseFloat(document.getElementById('t-stake').value);
+  const o = parseFloat(document.getElementById('t-odds').value);
+  const lg = document.getElementById('t-league').value.trim() || 'Unbekannt';
+  if(!s||!o||o<1) return showToast('Ungültige Eingabe',false);
+  const pnl = result==='W' ? s*(o-1) : -s;
+  const dateVal = document.getElementById('t-date').value;
+  const timeVal = document.getElementById('t-time').value;
+  const customDate = dateVal && timeVal ? new Date(dateVal + 'T' + timeVal + ':00').toISOString() : new Date().toISOString();
+  bets.push({id:Date.now(),stake:s,odds:o,result,league:lg,market:selMarket,period:selPeriodVal,date:customDate});
+  saveBets();
+  showToast((result==='W'?'+':'')+pnl.toFixed(2)+'€ · '+lg+' Ü'+selMarket, result==='W');
+}
+function deleteLast() {
+  if(!bets.length) return;
+  bets.pop(); saveBets(); showToast('Letzte Wette gelöscht');
+}
+function setFilter(val, btn) {
+  filterVal = val;
+  document.querySelectorAll('#panel-verlauf .tghost').forEach(b=>b.classList.remove('active-f'));
+  btn.classList.add('active-f');
+  renderVerlauf();
+}
+function renderStats() {
+  var el = document.getElementById('stats-content');
+  if(!bets.length) { el.innerHTML='<div style="text-align:center;color:var(--muted);padding:30px;font-size:12px;">Noch keine Wetten</div>'; return; }
+  var w=bets.filter(function(b){return b.result==='W';});
+  var wr=w.length/bets.length;
+  var avgO=bets.reduce(function(s,b){return s+b.odds;},0)/bets.length;
+  var profit=bets.reduce(function(s,b){return s+(b.result==='W'?b.stake*(b.odds-1):-b.stake);},0);
+  var ev=wr*(avgO-1)-(1-wr);
+  var streak=0; for(var i=bets.length-1;i>=0;i--){if(bets[i].result==='L')streak++;else break;}
+  var isPos=wr>=BREAK_EVEN;
+  var gc=isPos?'var(--green)':'var(--red)';
+  var html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">';
+  html+='<div class="scard" style="grid-column:span 2;">';
+  html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;">';
+  html+='<div><div class="scard-label">Gesamtgewinn</div>';
+  html+='<div class="scard-val" style="font-size:36px;color:'+gc+'">'+(profit>=0?'+':'')+profit.toFixed(2)+'€</div></div>';
+  html+='<div style="text-align:right;"><div class="scard-label">EV Status</div>';
+  html+='<div style="font-size:13px;color:'+gc+';font-weight:500;">'+(isPos?'✓ POSITIV':'✗ NEGATIV')+'</div>';
+  html+='<div style="font-size:11px;color:var(--muted);">'+(ev*100>=0?'+':'')+(ev*100).toFixed(2)+'% / Wette</div></div></div>';
+  html+='<div style="margin-top:10px;"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:3px;">';
+  html+='<span>WINRATE <span style="color:'+gc+'">'+(wr*100).toFixed(1)+'%</span></span>';
+  html+='<span>BREAK-EVEN '+(BREAK_EVEN*100).toFixed(1)+'%</span></div>';
+  html+='<div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden;">';
+  html+='<div style="height:100%;width:'+Math.min(100,wr*100)+'%;background:'+gc+';border-radius:3px;transition:width .5s;"></div></div></div></div>';
+  html+='<div class="scard"><div class="scard-label">Wetten</div><div class="scard-val">'+bets.length+'</div></div>';
+  html+='<div class="scard"><div class="scard-label">Gewonnen</div><div class="scard-val" style="color:var(--green)">'+w.length+'</div></div>';
+  html+='<div class="scard"><div class="scard-label">Ø Quote</div><div class="scard-val" style="font-size:20px;color:'+(avgO>=1.55?'var(--green)':'var(--red)')+'">'+avgO.toFixed(3)+'</div></div>';
+  html+='<div class="scard"><div class="scard-label">Verlustserie</div><div class="scard-val" style="font-size:20px;color:'+(streak>=4?'var(--red)':streak>=2?'var(--gold)':'var(--muted)')+'">'+streak+'x ✗</div></div>';
+  html+='</div>';
+  el.innerHTML=html;
+}
+function renderVerlauf() {
+  var el = document.getElementById('verlauf-list');
+  var filtered = bets.slice().reverse().filter(function(b){return filterVal==='all'||b.result===filterVal;});
+  if(!filtered.length){el.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:12px;">Keine Wetten</div>';return;}
+  el.innerHTML = filtered.slice(0,50).map(function(b){
+    var pnl=b.result==='W'?b.stake*(b.odds-1):-b.stake;
+    var d=new Date(b.date);
+    var dot='<div style="width:6px;height:6px;border-radius:50%;background:'+(b.result==='W'?'var(--green)':'var(--red)')+';flex-shrink:0;"></div>';
+    var info='<div style="flex:1;min-width:0;">';
+    info+='<div style="font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+b.league+'</div>';
+    info+='<div style="font-size:10px;color:var(--muted);">Ü'+b.market+' · '+(b.period||'Gesamt')+' · '+b.stake+'€ @ '+b.odds+' · '+d.getDate()+'.'+(d.getMonth()+1)+'. '+d.getHours()+':'+String(d.getMinutes()).padStart(2,'0')+'</div>';
+    info+='</div>';
+    var pnlDiv='<div style="font-size:13px;font-weight:500;color:'+(pnl>=0?'var(--green)':'var(--red)')+';flex-shrink:0;margin-right:4px;">'+(pnl>=0?'+':'')+pnl.toFixed(2)+'€</div>';
+    var delBtn='<button onclick="deleteBet('+b.id+')" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 4px;" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--muted)\'">✕</button>';
+    return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;">'+dot+info+pnlDiv+delBtn+'</div>';
+  }).join('');
+}
+function deleteBet(id) {
+  bets = bets.filter(b=>b.id!==id);
+  saveBets(); renderVerlauf();
+}
+function renderAll() { renderStats(); renderVerlauf(); }
+function exportData() {
+  const blob=new Blob([JSON.stringify(bets,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='wett_backup.json';a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exportiert ✓');
+}
+function copyData() {
+  navigator.clipboard.writeText(JSON.stringify(bets)).then(()=>showToast('Kopiert ✓')).catch(()=>showToast('Fehler',false));
+}
+function importData() {
+  try {
+    const parsed=JSON.parse(document.getElementById('import-text').value);
+    if(!Array.isArray(parsed))throw new Error();
+    let added=0;
+    parsed.forEach(b=>{if(!bets.find(x=>x.id===b.id)){bets.push(b);added++;}});
+    bets.sort((a,b)=>a.id-b.id);
+    saveBets();renderAll();
+    document.getElementById('import-box').style.display='none';
+    showToast(added+' Wetten importiert ✓');
+  } catch { showToast('Ungültiges Format',false); }
+}
+function clearAll() {
+  if(confirm('Alle Tracker-Daten löschen?')){bets=[];saveBets();renderAll();showToast('Gelöscht');}
+}
+// Set default date/time to now
+(function(){
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  document.getElementById('t-date').value = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  document.getElementById('t-time').value = pad(now.getHours())+':'+pad(now.getMinutes());
+})();
+loadBets();
+</script>
+</body>
+</html>
