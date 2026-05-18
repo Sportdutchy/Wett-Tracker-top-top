@@ -639,12 +639,106 @@ var selPeriodVal = 'Ganzes Spiel';
 var filterVal = 'all';
  
 // Storage
+var SYNC_KEY = '';
+var SYNC_BIN_ID = '';
+var JSONBIN_API = 'https://api.jsonbin.io/v3';
+var isSyncing = false;
+ 
 function loadBets() {
   try { const r = localStorage.getItem('bets_plan_v1'); bets = r ? JSON.parse(r) : []; } catch { bets = []; }
+  // Also load sync config
+  try { SYNC_KEY = localStorage.getItem('sync_api_key') || ''; SYNC_BIN_ID = localStorage.getItem('sync_bin_id') || ''; } catch {}
   renderAll();
+  updateSyncStatus();
 }
 function saveBets() {
   try { localStorage.setItem('bets_plan_v1', JSON.stringify(bets)); } catch {}
+  if(SYNC_KEY && SYNC_BIN_ID) syncToCloud();
+}
+ 
+function updateSyncStatus() {
+  var el = document.getElementById('sync-status');
+  if(!el) return;
+  if(SYNC_KEY && SYNC_BIN_ID) {
+    el.textContent = '☁ Sync aktiv';
+    el.style.color = 'var(--green)';
+  } else {
+    el.textContent = '☁ Sync nicht eingerichtet';
+    el.style.color = 'var(--muted)';
+  }
+}
+ 
+function saveSyncConfig() {
+  var key = document.getElementById('sync-api-key').value.trim();
+  var binId = document.getElementById('sync-bin-id').value.trim();
+  if(!key) return showToast('API Key fehlt', false);
+  SYNC_KEY = key;
+  SYNC_BIN_ID = binId;
+  try { localStorage.setItem('sync_api_key', key); localStorage.setItem('sync_bin_id', binId); } catch {}
+  if(!binId) {
+    createNewBin();
+  } else {
+    showToast('Sync gespeichert ✓');
+    updateSyncStatus();
+  }
+}
+ 
+async function createNewBin() {
+  showToast('Erstelle Cloud-Speicher...', true);
+  try {
+    var res = await fetch(JSONBIN_API + '/b', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-Master-Key':SYNC_KEY,'X-Bin-Name':'wett-tracker'},
+      body: JSON.stringify({bets:bets})
+    });
+    var data = await res.json();
+    if(data.metadata && data.metadata.id) {
+      SYNC_BIN_ID = data.metadata.id;
+      try { localStorage.setItem('sync_bin_id', SYNC_BIN_ID); } catch {}
+      document.getElementById('sync-bin-id').value = SYNC_BIN_ID;
+      showToast('Cloud-Speicher erstellt ✓');
+      updateSyncStatus();
+    } else {
+      showToast('Fehler: ' + JSON.stringify(data).slice(0,50), false);
+    }
+  } catch(e) { showToast('Verbindungsfehler', false); }
+}
+ 
+async function syncToCloud() {
+  if(!SYNC_KEY || !SYNC_BIN_ID || isSyncing) return;
+  isSyncing = true;
+  var el = document.getElementById('sync-status');
+  if(el) { el.textContent = '☁ Syncing...'; el.style.color = 'var(--gold)'; }
+  try {
+    await fetch(JSONBIN_API + '/b/' + SYNC_BIN_ID, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json','X-Master-Key':SYNC_KEY},
+      body: JSON.stringify({bets:bets})
+    });
+    if(el) { el.textContent = '☁ Synced ✓'; el.style.color = 'var(--green)'; }
+  } catch(e) {
+    if(el) { el.textContent = '☁ Sync Fehler'; el.style.color = 'var(--red)'; }
+  }
+  isSyncing = false;
+}
+ 
+async function syncFromCloud() {
+  if(!SYNC_KEY || !SYNC_BIN_ID) return showToast('Sync nicht eingerichtet', false);
+  showToast('Lade von Cloud...', true);
+  try {
+    var res = await fetch(JSONBIN_API + '/b/' + SYNC_BIN_ID + '/latest', {
+      headers: {'X-Master-Key':SYNC_KEY}
+    });
+    var data = await res.json();
+    if(data.record && data.record.bets) {
+      bets = data.record.bets;
+      saveBets();
+      renderAll();
+      showToast(bets.length + ' Wetten geladen ✓');
+    } else {
+      showToast('Keine Daten gefunden', false);
+    }
+  } catch(e) { showToast('Verbindungsfehler', false); }
 }
  
 function selMkt(btn, val) {
