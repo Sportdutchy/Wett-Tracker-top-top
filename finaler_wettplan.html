@@ -22,9 +22,9 @@
     --muted: #4a5568;
     --subtle: #1e2d45;
   }
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   body {
     background: var(--bg);
     color: var(--text);
@@ -34,7 +34,7 @@
     position: relative;
     overflow-x: hidden;
   }
-
+ 
   body::before {
     content: '';
     position: fixed;
@@ -43,7 +43,7 @@
     background: radial-gradient(circle, #00e67608 0%, transparent 70%);
     pointer-events: none;
   }
-
+ 
   body::after {
     content: '';
     position: fixed;
@@ -52,9 +52,9 @@
     background: radial-gradient(circle, #38b6ff06 0%, transparent 70%);
     pointer-events: none;
   }
-
+ 
   .wrap { max-width: 680px; margin: 0 auto; }
-
+ 
   /* HEADER */
   .header {
     margin-bottom: 48px;
@@ -85,7 +85,7 @@
     flex-wrap: wrap;
   }
   .header-sub b { color: var(--green); }
-
+ 
   /* SECTION */
   .section { margin-bottom: 36px; }
   .section-title {
@@ -104,7 +104,7 @@
     height: 1px;
     background: var(--border);
   }
-
+ 
   /* STAT GRID */
   .stat-grid {
     display: grid;
@@ -125,7 +125,7 @@
   .stat-value.gold { color: var(--gold); }
   .stat-value.blue { color: var(--blue); }
   .stat-note { font-size: 9px; color: var(--muted); margin-top: 4px; }
-
+ 
   /* WEEK TABLE */
   .week-table { display: flex; flex-direction: column; gap: 6px; }
   .day-row {
@@ -151,7 +151,7 @@
   }
   .day-row.active::before { background: var(--green); }
   .day-row.limited::before { background: var(--gold); }
-
+ 
   .day-name {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 18px;
@@ -159,7 +159,7 @@
   }
   .day-row.active .day-name { color: var(--green); }
   .day-row.limited .day-name { color: var(--gold); }
-
+ 
   .day-windows { display: flex; flex-wrap: wrap; gap: 5px; }
   .window-tag {
     font-size: 10px;
@@ -172,10 +172,10 @@
   .window-tag.secondary { background: #38b6ff15; color: var(--blue); border: 1px solid #38b6ff30; }
   .window-tag.midnight { background: #a78bfa15; color: #a78bfa; border: 1px solid #a78bfa30; }
   .window-tag.none { background: var(--red-dim); color: #ff6666; border: 1px solid #ff444430; font-style: italic; }
-
+ 
   .day-sleep { font-size: 10px; color: var(--muted); text-align: right; white-space: nowrap; }
   .day-sleep span { display: block; font-size: 9px; color: #2d3748; }
-
+ 
   /* FILTER RULES */
   .rules { display: flex; flex-direction: column; gap: 6px; }
   .rule {
@@ -195,7 +195,7 @@
   .rule.yes .rule-title { color: var(--green); }
   .rule.no  .rule-title { color: var(--red); }
   .rule-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
-
+ 
   /* BANKROLL */
   .bankroll-box {
     background: var(--gold-dim);
@@ -210,7 +210,7 @@
   .bankroll-label { font-size: 9px; color: #ffc94780; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
   .bankroll-value { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--gold); letter-spacing: 1px; }
   .bankroll-note { font-size: 10px; color: #ffc94766; margin-top: 3px; }
-
+ 
   /* PROGRESSION */
   .progression {
     display: flex;
@@ -238,7 +238,7 @@
   .prog-action { color: var(--green); font-weight: 500; white-space: nowrap; }
   .prog-row.active-phase { border-color: #162e20; background: #0a1a10; }
   .prog-row.active-phase .prog-phase { color: var(--green); }
-
+ 
   /* WARNING */
   .warning {
     background: #ff44440a;
@@ -251,7 +251,7 @@
     margin-top: 8px;
   }
   .warning b { color: var(--red); }
-
+ 
   /* FOOTER */
   .footer {
     margin-top: 48px;
@@ -265,14 +265,14 @@
     gap: 8px;
   }
   .footer span { color: var(--green); }
-
+ 
   @media (max-width: 480px) {
     .stat-grid { grid-template-columns: repeat(2,1fr); }
     .bankroll-box { grid-template-columns: 1fr; }
     .day-row { grid-template-columns: 80px 1fr; }
     .day-sleep { display: none; }
   }
-
+ 
   /* TRACKER */
   .ttab { background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;font-family:inherit;font-size:10px;letter-spacing:1px;padding:8px 12px;transition:all .15s; }
   .ttab.active { border-bottom-color:var(--green);color:var(--text); }
@@ -293,7 +293,7 @@
 </head>
 <body>
 <div class="wrap">
-
+ 
   <!-- HEADER -->
   <div class="header">
     <div class="header-label">Wett Elite · Johannes Scheine · Datenbasiert</div>
@@ -304,7 +304,7 @@
       <span>Strategie <b>Flat Betting</b></span>
     </div>
   </div>
-
+ 
   <!-- ERWARTETE ERGEBNISSE -->
   <div class="section">
     <div class="section-title">Erwartete Ergebnisse</div>
@@ -338,12 +338,12 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- WOCHENPLAN -->
   <div class="section">
     <div class="section-title">Wochenplan</div>
     <div class="week-table">
-
+ 
       <div class="day-row active">
         <div class="day-name">Montag</div>
         <div class="day-windows">
@@ -352,7 +352,7 @@
         </div>
         <div class="day-sleep">23:20 Bett<span>Aufstehen 7:30</span></div>
       </div>
-
+ 
       <div class="day-row limited">
         <div class="day-name">Dienstag</div>
         <div class="day-windows">
@@ -361,7 +361,7 @@
         </div>
         <div class="day-sleep">22:00 Bett<span>Aufstehen 6:20</span></div>
       </div>
-
+ 
       <div class="day-row active">
         <div class="day-name">Mittwoch</div>
         <div class="day-windows">
@@ -370,7 +370,7 @@
         </div>
         <div class="day-sleep">23:20 Bett<span>Aufstehen 7:30</span></div>
       </div>
-
+ 
       <div class="day-row active">
         <div class="day-name">Donnerstag</div>
         <div class="day-windows">
@@ -379,7 +379,7 @@
         </div>
         <div class="day-sleep">23:20 Bett<span>Aufstehen 7:30</span></div>
       </div>
-
+ 
       <div class="day-row limited">
         <div class="day-name">Freitag</div>
         <div class="day-windows">
@@ -388,7 +388,7 @@
         </div>
         <div class="day-sleep">22:00 Bett<span>Aufstehen 6:20</span></div>
       </div>
-
+ 
       <div class="day-row active">
         <div class="day-name">Samstag</div>
         <div class="day-windows">
@@ -398,7 +398,7 @@
         </div>
         <div class="day-sleep">01:30 Bett<span>kein fester Termin</span></div>
       </div>
-
+ 
       <div class="day-row active">
         <div class="day-name">Sonntag</div>
         <div class="day-windows">
@@ -408,10 +408,10 @@
         </div>
         <div class="day-sleep">01:30 Bett<span>kein fester Termin</span></div>
       </div>
-
+ 
     </div>
   </div>
-
+ 
   <!-- WETT-FILTER -->
   <div class="section">
     <div class="section-title">Wett-Filter — Was spielen, was nicht</div>
@@ -451,7 +451,7 @@
           <div class="rule-desc">39.1% Winrate über 23 Wetten — klarer Verlierer.</div>
         </div>
       </div>
-
+ 
       <div class="rule no">
         <div class="rule-icon">❌</div>
         <div class="rule-content">
@@ -461,7 +461,7 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- BANKROLL & EINSATZ -->
   <div class="section">
     <div class="section-title">Bankroll & Einsatz</div>
@@ -488,7 +488,7 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- EINSATZ-PROGRESSION -->
   <div class="section">
     <div class="section-title">Einsatz-Progression — Wann erhöhen?</div>
@@ -518,11 +518,11 @@
       <b>Wichtig:</b> Sinkt die Winrate unter 65% über 2 aufeinanderfolgende Wochen — Einsatz sofort wieder auf 20€ reduzieren. Die Daten basieren auf 7 Wochen. Mehr Daten = mehr Sicherheit.
     </div>
   </div>
-
+ 
   <!-- TRACKER -->
   <div class="section">
     <div class="section-title">Wett-Tracker</div>
-
+ 
     <!-- Tracker Tabs -->
     <div style="display:flex;border-bottom:1px solid var(--border);margin-bottom:16px;">
       <button class="ttab active" onclick="switchTab('eingabe')" id="tab-eingabe">EINGABE</button>
@@ -530,7 +530,7 @@
       <button class="ttab" onclick="switchTab('verlauf')" id="tab-verlauf">VERLAUF</button>
       <button class="ttab" onclick="switchTab('daten')" id="tab-daten">DATEN</button>
     </div>
-
+ 
     <!-- EINGABE -->
     <div id="panel-eingabe">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
@@ -583,14 +583,14 @@
       </div>
       <div id="t-toast" style="display:none;margin-top:8px;padding:8px 14px;border-radius:6px;font-size:12px;text-align:center;"></div>
     </div>
-
+ 
     <!-- STATS -->
     <div id="panel-stats" style="display:none;">
       <div id="stats-content">
         <div style="text-align:center;color:var(--muted);padding:30px;font-size:12px;">Noch keine Wetten eingetragen</div>
       </div>
     </div>
-
+ 
     <!-- VERLAUF -->
     <div id="panel-verlauf" style="display:none;">
       <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;">
@@ -600,7 +600,7 @@
       </div>
       <div id="verlauf-list" style="display:flex;flex-direction:column;gap:5px;max-height:320px;overflow-y:auto;"></div>
     </div>
-
+ 
     <!-- DATEN -->
     <div id="panel-daten" style="display:none;">
       <div style="display:flex;flex-direction:column;gap:8px;">
@@ -623,21 +623,21 @@
       </div>
     </div>
   </div>
-
+ 
   <div class="footer">
     <span>Finaler Wettplan · Erstellt Mai 2026</span>
     <span>897 Wetten analysiert · 7 Wochen Datenbasis</span>
   </div>
-
+ 
 </div>
-
+ 
 <script>
 var BREAK_EVEN = 1/1.55;
 var bets = [];
 var selMarket = '0.5';
 var selPeriodVal = 'Ganzes Spiel';
 var filterVal = 'all';
-
+ 
 // Storage
 function loadBets() {
   try { const r = localStorage.getItem('bets_plan_v1'); bets = r ? JSON.parse(r) : []; } catch { bets = []; }
@@ -646,7 +646,7 @@ function loadBets() {
 function saveBets() {
   try { localStorage.setItem('bets_plan_v1', JSON.stringify(bets)); } catch {}
 }
-
+ 
 function selMkt(btn, val) {
   selMarket = val;
   document.querySelectorAll('.mktbtn').forEach(b => { if(['0.5','1.5','2.5','3.5','4.5','5.5','6.5'].includes(b.textContent.replace('Ü',''))) b.classList.remove('sel'); });
